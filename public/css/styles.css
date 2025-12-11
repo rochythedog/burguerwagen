@@ -241,3 +241,20 @@ footer {
     color: white !important;
 }
 
+/* login */
+.login-container {
+    min-height: 70vh;
+    padding-top: 10%;
+    padding-bottom: 5%;
+}
+
+/* centrado del logo del header */
+.vw-header .d-flex.justify-content-between > div:first-child,
+.vw-header .d-flex.justify-content-between > div:last-child {
+    flex: 1;
+}
+
+.vw-header .d-flex.justify-content-between > div:last-child {
+    justify-content: flex-end;
+}
+
