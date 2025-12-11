@@ -1,7 +1,6 @@
 <?php
 class HomeController extends Controller
 {
-    // INDEX
     public function index(): void
     {
         $productModel = new Product();

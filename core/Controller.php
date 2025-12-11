@@ -1,4 +1,5 @@
 <?php
+//controlador principal base
 class Controller
 {
     protected function render(string $viewName, array $data = []): void

@@ -10,7 +10,7 @@ class View
             die("View '$viewName' not found.");
         }
 
-        // Make $data keys become variables
+        // convertimos en variables la data
         extract($data);
 
         include BASE_PATH . '/views/layout/header.php';

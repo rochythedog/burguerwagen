@@ -1,7 +1,7 @@
 <?php
 class ProductController extends Controller
 {
-    // INDEX: list all products
+    // listar todos los productos
     public function index(): void
     {
         $productModel = new Product();
@@ -13,7 +13,7 @@ class ProductController extends Controller
         ]);
     }
 
-    // SHOW: show one product
+    // mostrar producto
     public function show(): void
     {
         if (!isset($_GET['id'])) {

@@ -1,16 +1,243 @@
+:root {
+  --vw-dark-blue: #001e50;
+  --vw-light-blue: #00b1eb;
+  --vw-white: #ffffff;
+  --vw-grey: #f2f2f2;
+  --vw-text: #1f1f1f;
+}
+
 body {
-  background-color: #f5f5f5;
+  background-color: var(--vw-white);
+  color: var(--vw-text);
+  font-family: "Arial", sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--vw-white) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .navbar-brand {
-  font-weight: bold;
+  font-weight: 700;
+  color: var(--vw-dark-blue) !important;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.nav-link {
+  color: var(--vw-text) !important;
+  font-weight: 500;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.nav-link:hover {
+  color: var(--vw-dark-blue) !important;
+  text-decoration: underline;
+}
+
+/* botones */
+.btn-primary {
+  background-color: var(--vw-dark-blue);
+  border-color: var(--vw-dark-blue);
+  border-radius: 50px; /* Pill shape */
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #001538;
+  border-color: #001538;
+}
+
+.btn-outline-primary {
+  color: var(--vw-dark-blue);
+  border-color: var(--vw-dark-blue);
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--vw-dark-blue);
+  color: var(--vw-white);
+}
+
+.btn-cta {
+    background-color: var(--vw-light-blue);
+    color: var(--vw-dark-blue);
+    border: none;
+    border-radius: 50px;
+    padding: 10px 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+.btn-cta:hover {
+    background-color: #0099cc;
+    color: var(--vw-white);
+}
+
+
+/* baner principal */
+.hero-section {
+  position: relative;
+  height: 600px;
+  background-color: #333; /* Fallback */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  color: white;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  padding-left: 5%;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* tarjetas */
+.card {
+  border: none;
+  background-color: var(--vw-grey);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card img {
-  object-fit: cover;
+  object-fit: contain;
   max-height: 200px;
+  background-color: white;
+  padding: 1rem;
 }
 
-footer {
-  margin-top: 3rem;
+.card-body {
+  text-align: center;
 }
+
+.card-title {
+  font-weight: 700;
+  color: var(--vw-dark-blue);
+  text-transform: uppercase;
+  font-size: 1.5rem;
+}
+
+.price-tag {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--vw-text);
+}
+
+/* Footer */
+footer {
+  background-color: var(--vw-white);
+  border-top: 1px solid #e0e0e0;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  color: var(--vw-text);
+}
+
+.footer-links h5 {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: var(--vw-text);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* utilidades */
+.section-title {
+  font-weight: 300;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--vw-dark-blue);
+}
+
+.section-title strong {
+    font-weight: 800;
+}
+
+/* Header */
+.vw-header {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    padding: 15px 0;
+}
+
+.vw-line {
+    border-bottom: 2px solid rgba(255,255,255,0.8);
+    position: absolute;
+    top: 120%;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+}
+
+.vw-offcanvas {
+    background-color: #001e50;
+    color: white;
+}
+
+.vw-offcanvas .nav-link {
+    color: white !important;
+    font-size: 1.2rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.vw-offcanvas .nav-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white !important;
+}
+

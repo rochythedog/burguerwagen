@@ -1,6 +1,4 @@
-// Simple cart using localStorage
-
-// Load cart
+// cargar carrito con local storage
 function loadCart() {
   const raw = localStorage.getItem('bw_cart');
   if (!raw) return [];
@@ -11,12 +9,12 @@ function loadCart() {
   }
 }
 
-// Save cart
+// guardar carrito
 function saveCart(cart) {
   localStorage.setItem('bw_cart', JSON.stringify(cart));
 }
 
-// Add product to cart
+// añadir producto a carrito
 function addToCart(productId, name, price) {
   const cart = loadCart();
   const existing = cart.find(item => item.product_id === productId);
@@ -36,7 +34,7 @@ function addToCart(productId, name, price) {
   alert('Product added to cart.');
 }
 
-// Attach cart JSON to a form (for order create)
+// gestionar carrito con json
 function attachCartToForm(formId, fieldName = 'cart_json') {
   const form = document.getElementById(formId);
   if (!form) return;

@@ -1,5 +1,6 @@
 <?php
 abstract class Model
+//modelo principal
 {
     protected mysqli $db;
 

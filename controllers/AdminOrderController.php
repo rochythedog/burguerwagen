@@ -1,7 +1,7 @@
 <?php
 class AdminOrderController extends Controller
 {
-    // INDEX: show admin orders page (data from API)
+    // carga la vista de admin + comprueba rol
     public function index(): void
     {
         if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {

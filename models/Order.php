@@ -1,7 +1,7 @@
 <?php
 class Order extends Model
 {
-    // INDEX for a user
+    // RECIBIR PEDIDOS POR USUARIO
     public function getOrdersByUser(int $userId): array
     {
         $sql = "SELECT * FROM pedidos WHERE usuario_id = ? ORDER BY fecha DESC";
@@ -17,7 +17,7 @@ class Order extends Model
         return $rows;
     }
 
-    // SHOW with details (user + address + items)
+    // Mostrar el pedido con direccion usuari etc
     public function getOrderWithDetails(int $orderId): ?array
     {
         $sql = "SELECT p.*, u.nombre, u.apellidos,
@@ -55,7 +55,7 @@ class Order extends Model
         return $order;
     }
 
-    // CREATE: from cart items
+    // crear pedido con los items del carrito
     // $items: [ ['product_id'=>..., 'quantity'=>..., 'unit_price'=>...], ... ]
     public function createOrder(int $userId, int $addressId, float $total, string $currency, array $items): ?int
     {

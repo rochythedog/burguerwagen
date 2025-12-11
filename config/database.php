@@ -1,4 +1,5 @@
 <?php
+//recibir la conexion de la db
 class Database
 {
     private static ?mysqli $connection = null;

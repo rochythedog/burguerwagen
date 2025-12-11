@@ -1,5 +1,5 @@
 <?php
-// Configuración básica y CORS
+// config basica que explico david
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -17,29 +17,29 @@ $db = Database::getConnection();
 $recurso = $_GET['resource'] ?? 'pedidos';
 $metodo  = $_SERVER['REQUEST_METHOD'];
 
-// Función simple para responder
+// devuelve la respuesta
 function responder($status, $data, $code = 200) {
     http_response_code($code);
     echo json_encode(['status' => $status, 'data' => $data]);
     exit;
 }
 
-// Router simple
+// router 
 if ($recurso === 'pedidos') {
     if ($metodo === 'GET') {
         if (isset($_GET['id'])) {
             // Ver un pedido
             $id = (int)$_GET['id'];
             
-            // Datos del pedido
+            // consulta para recoger los datos del pedido
             $stmt = $db->prepare("SELECT p.*, CONCAT(u.nombre, ' ', u.apellidos) as customer FROM pedidos p JOIN usuarios u ON p.usuario_id = u.id WHERE p.id = ?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $pedido = $stmt->get_result()->fetch_assoc();
-
+            //si no existe el pedido devuelve error
             if (!$pedido) responder('error', 'Pedido no encontrado', 404);
 
-            // Items del pedido
+            // recogemos items del pedido
             $stmtItems = $db->prepare("SELECT lp.*, pr.nombre as product_name FROM lineas_pedido lp JOIN productos pr ON lp.producto_id = pr.id WHERE lp.pedido_id = ?");
             $stmtItems->bind_param("i", $id);
             $stmtItems->execute();
@@ -52,7 +52,7 @@ if ($recurso === 'pedidos') {
             responder('success', $pedido);
 
         } else {
-            // Listar pedidos
+            // listamos los pedidos
             $sql = "SELECT p.id, CONCAT(u.nombre, ' ', u.apellidos) as customer, p.estado as status, p.total, p.fecha as date FROM pedidos p JOIN usuarios u ON p.usuario_id = u.id ORDER BY p.fecha DESC";
             $result = $db->query($sql);
             
@@ -62,7 +62,7 @@ if ($recurso === 'pedidos') {
         }
     }
     elseif ($metodo === 'PUT') {
-        // Actualizar estado
+        // si es put actualizamos estado
         $input = json_decode(file_get_contents("php://input"), true);
         $id = (int)$input['id'];
         $status = $input['status'];
@@ -74,9 +74,9 @@ if ($recurso === 'pedidos') {
         else responder('error', 'Error al actualizar', 500);
     }
     elseif ($metodo === 'DELETE') {
-        // Borrar pedido
+        // si es delete entramos aqui para borrarlo
         $id = (int)$_GET['id'];
-        
+        //la query que borra el pedido de la base de datos
         $db->query("DELETE FROM lineas_pedido WHERE pedido_id = $id");
         if ($db->query("DELETE FROM pedidos WHERE id = $id")) {
             responder('success', 'Eliminado');
