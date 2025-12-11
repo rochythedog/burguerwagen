@@ -1,7 +1,7 @@
 <?php
 class Product extends Model
 {
-    // INDEX: list all active products
+    // INDEX: listar todos los productos activos
     public function getAllActiveProducts(): array
     {
         $sql = "SELECT p.*, c.nombre AS category_name
@@ -18,7 +18,7 @@ class Product extends Model
         return $rows;
     }
 
-    // SHOW: simple find by id
+    // encontrar por id
     public function getProductById(int $id): ?array
     {
         $sql = "SELECT p.*, c.nombre AS category_name

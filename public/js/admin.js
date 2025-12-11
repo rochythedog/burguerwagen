@@ -1,10 +1,8 @@
-// Simple JS to manage orders from admin using the API
-
 document.addEventListener('DOMContentLoaded', () => {
   loadOrders();
 });
 
-// INDEX: get all orders
+// recibir todos los pedidos
 function loadOrders() {
   fetch('api/index.php?resource=pedidos')
     .then(res => res.json())

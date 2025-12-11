@@ -21,7 +21,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Rellenado por JS -->
                     </tbody>
                 </table>
             </div>

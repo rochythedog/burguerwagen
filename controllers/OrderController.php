@@ -1,7 +1,7 @@
 <?php
 class OrderController extends Controller
 {
-    // INDEX: my orders
+    // te lleva a la vista de mis pedidos
     public function index(): void
     {
         $this->requireLogin();
@@ -15,7 +15,7 @@ class OrderController extends Controller
         ]);
     }
 
-    // CREATE: from cart JSON
+    // crea json del carrito
     public function create(): void
     {
         $this->requireLogin();

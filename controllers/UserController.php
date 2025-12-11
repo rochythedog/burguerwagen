@@ -1,7 +1,7 @@
 <?php
 class UserController extends Controller
 {
-    // CREATE (register)
+    // CREATE (registro)
     public function register(): void
     {
         $errors = [];
@@ -80,7 +80,7 @@ class UserController extends Controller
         $this->redirect('index.php');
     }
 
-    // SHOW (profile)
+    // SHOW (perfil)
     public function profile(): void
     {
         $this->requireLogin();
