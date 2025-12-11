@@ -7,7 +7,7 @@
         <ul>
           <li><a href="#">BurguerWagen España</a></li>
           <li><a href="#">BurguerWagen Canarias</a></li>
-          <li><a href="#">BurguerWagen Internacional</a></li><
+          <li><a href="#">BurguerWagen Internacional</a></li>
         </ul>
       </div>
       <div class="col-md-3">
