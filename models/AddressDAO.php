@@ -23,7 +23,13 @@ class AddressDAO extends Model
         $pais = $address->getPais();
 
         $stmt->bind_param("isssss", $uid, $alias, $dir, $ciudad, $cp, $pais);
-        return $stmt->execute();
+        $result = $stmt->execute();
+
+        if ($result) {
+            $address->setId($this->db->insert_id);
+        }
+        
+        return $result;
     }
 
     public function getAllByUser(int $userId): array
