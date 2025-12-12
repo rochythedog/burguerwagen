@@ -1,6 +1,16 @@
 <?php
 class Order extends Model
 {
+    private ?int $id = null;
+    private ?int $usuario_id = null;
+    private ?int $direccion_id = null;
+    private ?string $estado = 'pending';
+    private ?string $moneda = 'EUR';
+    private ?float $total = null;
+    private ?string $fecha = null;
+
+    public function __construct() {}
+
     // RECIBIR PEDIDOS POR USUARIO
     public function getOrdersByUser(int $userId): array
     {
@@ -90,4 +100,22 @@ class Order extends Model
             return null;
         }
     }
+
+    // Getters
+    public function getId(): ?int { return $this->id; }
+    public function getUsuarioId(): ?int { return $this->usuario_id; }
+    public function getDireccionId(): ?int { return $this->direccion_id; }
+    public function getEstado(): ?string { return $this->estado; }
+    public function getMoneda(): ?string { return $this->moneda; }
+    public function getTotal(): ?float { return $this->total; }
+    public function getFecha(): ?string { return $this->fecha; }
+
+    // Setters
+    public function setId(?int $id): void { $this->id = $id; }
+    public function setUsuarioId(?int $usuario_id): void { $this->usuario_id = $usuario_id; }
+    public function setDireccionId(?int $direccion_id): void { $this->direccion_id = $direccion_id; }
+    public function setEstado(?string $estado): void { $this->estado = $estado; }
+    public function setMoneda(?string $moneda): void { $this->moneda = $moneda; }
+    public function setTotal(?float $total): void { $this->total = $total; }
+    public function setFecha(?string $fecha): void { $this->fecha = $fecha; }
 }

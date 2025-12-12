@@ -1,29 +1,32 @@
 <?php
-class Address extends Model
+
+class Address
 {
-    public function getAddressesByUser(int $userId): array
-    {
-        $sql = "SELECT * FROM direcciones WHERE usuario_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    private ?int $id = null;
+    private ?int $usuario_id = null;
+    private ?string $alias = null;
+    private ?string $direccion = null;
+    private ?string $ciudad = null;
+    private ?string $cp = null;
+    private ?string $pais = null;
 
-        $rows = [];
-        while ($row = $result->fetch_assoc()) {
-            $rows[] = $row;
-        }
-        return $rows;
-    }
+    public function __construct() {}
 
-    public function createAddress(int $userId, string $alias, string $address, string $city, string $zip, string $country): bool
-    {
-        $sql = "INSERT INTO direcciones (usuario_id, alias, direccion, ciudad, cp, pais)
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        if (!$stmt) return false;
+    // Getters
+    public function getId(): ?int { return $this->id; }
+    public function getUsuarioId(): ?int { return $this->usuario_id; }
+    public function getAlias(): ?string { return $this->alias; }
+    public function getDireccion(): ?string { return $this->direccion; }
+    public function getCiudad(): ?string { return $this->ciudad; }
+    public function getCp(): ?string { return $this->cp; }
+    public function getPais(): ?string { return $this->pais; }
 
-        $stmt->bind_param("isssss", $userId, $alias, $address, $city, $zip, $country);
-        return $stmt->execute();
-    }
+    // Setters
+    public function setId(?int $id): void { $this->id = $id; }
+    public function setUsuarioId(?int $usuario_id): void { $this->usuario_id = $usuario_id; }
+    public function setAlias(?string $alias): void { $this->alias = $alias; }
+    public function setDireccion(?string $direccion): void { $this->direccion = $direccion; }
+    public function setCiudad(?string $ciudad): void { $this->ciudad = $ciudad; }
+    public function setCp(?string $cp): void { $this->cp = $cp; }
+    public function setPais(?string $pais): void { $this->pais = $pais; }
 }
