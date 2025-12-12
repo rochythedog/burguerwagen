@@ -1,5 +1,5 @@
 <div class="container d-flex justify-content-center align-items-center login-container">
-    <div class="w-100" style="max-width: 400px;">
+    <div class="w-100" style="max-width: 500px;">
         
         <div class="text-center mb-5">
             <h1 class="section-title mb-2">Crear <strong>cuenta</strong></h1>
@@ -17,9 +17,19 @@
         <?php endif; ?>
 
         <form method="post" class="d-flex flex-column gap-3">
-            <div class="form-floating">
-                <input type="text" class="form-control rounded-0 border-0 border-bottom bg-transparent" name="nombre" id="nombre" placeholder="Tu nombre" required>
-                <label for="nombre" class="text-muted">Nombre completo</label>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control rounded-0 border-0 border-bottom bg-transparent" name="nombre" id="nombre" placeholder="Tu nombre" required>
+                        <label for="nombre" class="text-muted">Nombre</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control rounded-0 border-0 border-bottom bg-transparent" name="apellidos" id="apellidos" placeholder="Tus apellidos" required>
+                        <label for="apellidos" class="text-muted">Apellidos</label>
+                    </div>
+                </div>
             </div>
 
             <div class="form-floating">

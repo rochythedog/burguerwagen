@@ -1,44 +1,30 @@
 <?php
-class User extends Model
+
+class User
 {
-    public function createUser(string $name, string $lastName, string $email, string $password): bool
-    {
-        $sql = "INSERT INTO usuarios (nombre, apellidos, email, password_hash) VALUES (?, ?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        if (!$stmt) return false;
+    private ?int $id = null;
+    private ?string $nombre = null;
+    private ?string $apellidos = null;
+    private ?string $email = null;
+    private ?string $password_hash = null;
+    private ?string $rol = 'customer';
+    private ?string $creado_en = null;
 
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param("ssss", $name, $lastName, $email, $hash);
-        return $stmt->execute();
-    }
+    public function __construct() {}
 
-    public function getUserByEmail(string $email): ?array
-    {
-        $sql = "SELECT * FROM usuarios WHERE email = ? LIMIT 1";
-        $stmt = $this->db->prepare($sql);
-        if (!$stmt) return null;
+    public function getId(): ?int { return $this->id; }
+    public function getNombre(): ?string { return $this->nombre; }
+    public function getApellidos(): ?string { return $this->apellidos; }
+    public function getEmail(): ?string { return $this->email; }
+    public function getPassword(): ?string { return $this->password_hash; }
+    public function getRol(): ?string { return $this->rol; }
+    public function getCreadoEn(): ?string { return $this->creado_en; }
 
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($row = $result->fetch_assoc()) {
-            return $row;
-        }
-        return null;
-    }
-
-    public function getUserById(int $id): ?array
-    {
-        $sql = "SELECT * FROM usuarios WHERE id = ? LIMIT 1";
-        $stmt = $this->db->prepare($sql);
-        if (!$stmt) return null;
-
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($row = $result->fetch_assoc()) {
-            return $row;
-        }
-        return null;
-    }
+    public function setId(?int $id): void { $this->id = $id; }
+    public function setNombre(?string $nombre): void { $this->nombre = $nombre; }
+    public function setApellidos(?string $apellidos): void { $this->apellidos = $apellidos; }
+    public function setEmail(?string $email): void { $this->email = $email; }
+    public function setPassword(?string $password): void { $this->password_hash = $password; }
+    public function setRol(?string $rol): void { $this->rol = $rol; }
+    public function setCreadoEn(?string $creado_en): void { $this->creado_en = $creado_en; }
 }

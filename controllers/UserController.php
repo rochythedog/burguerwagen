@@ -1,100 +1,126 @@
 <?php
-class UserController extends Controller
+require_once 'models/UserDAO.php';
+
+class UserController
 {
-    // CREATE (registro)
-    public function register(): void
+    public function index()
     {
-        $errors = [];
+        if (isset($_SESSION['identity'])) {
+            header("Location: index.php?controller=user&action=profile");
+        } else {
+            header("Location: index.php?controller=user&action=login");
+        }
+    }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name      = trim($_POST['name'] ?? '');
-            $lastName  = trim($_POST['last_name'] ?? '');
-            $email     = trim($_POST['email'] ?? '');
-            $password  = $_POST['password'] ?? '';
-            $password2 = $_POST['password2'] ?? '';
+    public function register()
+    {
+        if (isset($_POST) && !empty($_POST)) {
+            $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : false;
+            $apellidos = isset($_POST['apellidos']) ? $_POST['apellidos'] : '';
+            $email = isset($_POST['email']) ? $_POST['email'] : false;
+            $password = isset($_POST['password']) ? $_POST['password'] : false;
 
-            if ($name === '' || $email === '' || $password === '') {
-                $errors[] = "Name, email and password are required.";
-            }
-            if ($password !== $password2) {
-                $errors[] = "Passwords do not match.";
-            }
+            if ($nombre && $email && $password) {
+                $user = new User();
+                $user->setNombre($nombre);
+                $user->setApellidos($apellidos);
+                $user->setEmail($email);
+                $user->setPassword($password);
+                $user->setRol('customer');
 
-            $userModel = new User();
-
-            if (empty($errors)) {
-                if ($userModel->getUserByEmail($email)) {
-                    $errors[] = "User with this email already exists.";
-                } else {
-                    if ($userModel->createUser($name, $lastName, $email, $password)) {
-                        $this->redirect('index.php?controller=user&action=login');
+                $userDAO = new UserDAO();
+                
+                try {
+                    $save = $userDAO->create($user);
+                    if ($save) {
+                        $_SESSION['register'] = "complete";
+                        header("Location: index.php?controller=user&action=login");
+                        return;
                     } else {
-                        $errors[] = "Error creating user.";
+                        $_SESSION['register'] = "failed";
                     }
+                } catch (Exception $e) {
+                    $_SESSION['register'] = "failed";
                 }
-            }
-        }
-
-        $this->render('user/register', [
-            'title'  => 'Register',
-            'errors' => $errors
-        ]);
-    }
-
-    // LOGIN
-    public function login(): void
-    {
-        $errors = [];
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email    = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
-
-            if ($email === '' || $password === '') {
-                $errors[] = "Email and password are required.";
             } else {
-                $userModel = new User();
-                $user = $userModel->getUserByEmail($email);
-
-                if ($user && password_verify($password, $user['password_hash'])) {
-                    $_SESSION['user_id']   = $user['id'];
-                    $_SESSION['user_name'] = $user['nombre'];
-                    $_SESSION['user_role'] = $user['rol'];
-                    $this->redirect('index.php');
-                } else {
-                    $errors[] = "Wrong email or password.";
-                }
+                $_SESSION['register'] = "failed";
             }
         }
-
-        $this->render('user/login', [
-            'title'  => 'Login',
-            'errors' => $errors
-        ]);
+        require_once 'views/layout/header.php';
+        require_once 'views/user/register.php';
+        require_once 'views/layout/footer.php';
     }
 
-    // LOGOUT
-    public function logout(): void
+    public function login()
     {
-        session_destroy();
-        $this->redirect('index.php');
+        if (isset($_POST) && !empty($_POST)) {
+            $userDAO = new UserDAO();
+            $user = $userDAO->getByEmail($_POST['email']);
+
+            if ($user && password_verify($_POST['password'], $user->getPassword())) {
+                $_SESSION['identity'] = true;
+                $_SESSION['user_id'] = $user->getId();
+                $_SESSION['user_name'] = $user->getNombre();
+                $_SESSION['user_email'] = $user->getEmail();
+                $_SESSION['user_role'] = $user->getRol();
+
+                if ($user->getRol() == 'admin') {
+                    $_SESSION['admin'] = true;
+                }
+                header("Location: index.php");
+                return;
+            } else {
+                $_SESSION['error_login'] = 'Identificación fallida !!';
+            }
+        }
+        require_once 'views/layout/header.php';
+        require_once 'views/user/login.php';
+        require_once 'views/layout/footer.php';
     }
 
-    // SHOW (perfil)
-    public function profile(): void
+    public function logout()
     {
-        $this->requireLogin();
+        if (isset($_SESSION['identity'])) {
+            session_unset();
+            session_destroy();
+        }
+        header("Location: index.php");
+    }
 
-        $userModel    = new User();
-        $addressModel = new Address();
+    public function profile()
+    {
+        if (!isset($_SESSION['identity'])) {
+            header("Location: index.php?controller=user&action=login");
+            return;
+        }
 
-        $user      = $userModel->getUserById($_SESSION['user_id']);
-        $addresses = $addressModel->getAddressesByUser($_SESSION['user_id']);
+        $userDAO = new UserDAO();
+        $user = $userDAO->getById($_SESSION['user_id']);
+        
+        require_once 'views/layout/header.php';
+        require_once 'views/user/profile.php';
+        require_once 'views/layout/footer.php';
+    }
 
-        $this->render('user/profile', [
-            'title'     => 'My account',
-            'user'      => $user,
-            'addresses' => $addresses
-        ]);
+    public function update()
+    {
+        if (isset($_POST) && isset($_SESSION['identity'])) {
+            $userDAO = new UserDAO();
+            $user = $userDAO->getById($_SESSION['user_id']);
+            
+            $user->setNombre($_POST['nombre']);
+            $user->setApellidos($_POST['apellidos']);
+            $user->setEmail($_POST['email']);
+
+            $update = $userDAO->update($user);
+
+            if ($update) {
+                $_SESSION['user_name'] = $user->getNombre();
+                $success = "Datos actualizados correctamente";
+            } else {
+                $errors = ["Error al actualizar los datos"];
+            }
+        }
+        $this->profile();
     }
 }
