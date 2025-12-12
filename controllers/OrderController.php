@@ -2,6 +2,7 @@
 require_once 'models/OrderDAO.php';
 require_once 'models/OrderItemDAO.php';
 require_once 'models/ProductDAO.php';
+require_once 'models/AddressDAO.php';
 
 class OrderController
 {
@@ -10,7 +11,6 @@ class OrderController
         if (isset($_SESSION['identity'])) {
             $userId = $_SESSION['user_id'];
             $orderDAO = new OrderDAO();
-            // Obtener pedidos como objetos
             $orders = $orderDAO->getAllByUser($userId);
             
             require_once 'views/layout/header.php';
@@ -45,7 +45,6 @@ class OrderController
             $producto = $productDAO->getById($producto_id);
 
             if ($producto) {
-                // Creamos un objeto estándar para guardar en sesión
                 $prodStd = new stdClass();
                 $prodStd->id = $producto->getId();
                 $prodStd->nombre = $producto->getNombre();
@@ -93,39 +92,62 @@ class OrderController
         if (isset($_SESSION['identity'])) {
             if (isset($_POST) && isset($_SESSION['carrito'])) {
                 $usuario_id = $_SESSION['user_id'];
-                $provincia = isset($_POST['provincia']) ? $_POST['provincia'] : '';
-                $localidad = isset($_POST['localidad']) ? $_POST['localidad'] : '';
-                $direccion = isset($_POST['direccion']) ? $_POST['direccion'] : '';
+                
+                // Recoger datos del formulario
+                $direccion = $_POST['direccion'] ?? '';
+                $ciudad = $_POST['ciudad'] ?? '';
+                $cp = $_POST['cp'] ?? '';
+                $pais = $_POST['pais'] ?? 'España';
 
-                $coste = 0;
-                foreach ($_SESSION['carrito'] as $indice => $elemento) {
-                    $coste += $elemento['precio'] * $elemento['unidades'];
-                }
+                // 1. Guardar la dirección primero
+                $address = new Address();
+                $address->setUsuarioId($usuario_id);
+                $address->setAlias('Envío ' . date('d/m/Y'));
+                $address->setDireccion($direccion);
+                $address->setCiudad($ciudad);
+                $address->setCp($cp);
+                $address->setPais($pais);
 
-                $order = new Order();
-                $order->setUsuarioId($usuario_id);
-                $order->setProvincia($provincia);
-                $order->setLocalidad($localidad);
-                $order->setDireccion($direccion);
-                $order->setCoste($coste);
-                $order->setEstado('confirm');
+                $addressDAO = new AddressDAO();
+                $savedAddr = $addressDAO->save($address);
 
-                $orderDAO = new OrderDAO();
-                $save = $orderDAO->save($order);
-
-                if ($save) {
-                    $orderItemDAO = new OrderItemDAO();
+                if ($savedAddr) {
+                    // 2. Calcular total
+                    $total = 0;
                     foreach ($_SESSION['carrito'] as $elemento) {
-                        $item = new OrderItem();
-                        $item->setPedidoId($order->getId());
-                        $item->setProductoId($elemento['id_producto']);
-                        $item->setUnidades($elemento['unidades']);
-                        $orderItemDAO->save($item);
+                        $total += $elemento['precio'] * $elemento['unidades'];
                     }
 
-                    unset($_SESSION['carrito']);
-                    header("Location: index.php?controller=order&action=confirmed&id=" . $order->getId());
+                    // 3. Crear el pedido
+                    $order = new Order();
+                    $order->setUsuarioId($usuario_id);
+                    $order->setDireccionId($address->getId()); // Usamos el ID de la dirección guardada
+                    $order->setTotal($total);
+                    $order->setEstado('confirm');
+                    $order->setMoneda('EUR');
+
+                    $orderDAO = new OrderDAO();
+                    $save = $orderDAO->save($order);
+
+                    if ($save) {
+                        // 4. Guardar líneas de pedido
+                        $orderItemDAO = new OrderItemDAO();
+                        foreach ($_SESSION['carrito'] as $elemento) {
+                            $item = new OrderItem();
+                            $item->setPedidoId($order->getId());
+                            $item->setProductoId($elemento['id_producto']);
+                            $item->setCantidad($elemento['unidades']);
+                            $item->setPrecioUnitario($elemento['precio']);
+                            $orderItemDAO->save($item);
+                        }
+
+                        unset($_SESSION['carrito']);
+                        header("Location: index.php?controller=order&action=confirmed&id=" . $order->getId());
+                    } else {
+                        header("Location: index.php?controller=order&action=confirm");
+                    }
                 } else {
+                    // Error al guardar dirección
                     header("Location: index.php?controller=order&action=confirm");
                 }
             } else {
@@ -142,7 +164,6 @@ class OrderController
             $orderDAO = new OrderDAO();
             $order = $orderDAO->getById($_GET['id']);
             
-            // Verificar que el pedido pertenece al usuario
             if ($order && $order->getUsuarioId() == $_SESSION['user_id']) {
                 $orderItemDAO = new OrderItemDAO();
                 $productos = $orderItemDAO->getByOrderId($_GET['id']);
