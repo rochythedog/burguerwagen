@@ -46,7 +46,7 @@
             <div class="mt-auto">
                 <div class="d-inline-block bg-success text-white rounded-circle p-2 mb-3" style="width: 40px; height: 40px; line-height: 25px;">C</div>
                 <p class="price-tag"><?= htmlspecialchars($p['nombre']) ?> desde <?= number_format($p['precio'], 2) ?>€</p>
-                <a href="index.php?controller=product&action=show&id=<?= $p['id'] ?>" class="btn btn-cta w-100">Configurar</a>
+                <a href="index.php?controller=product&action=show&id=<?= $p['id'] ?>" class="btn btn-cta w-100">Pedir</a>
             </div>
         </div>
       </div>
