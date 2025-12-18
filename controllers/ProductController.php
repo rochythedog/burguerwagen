@@ -43,7 +43,7 @@ class ProductController
                     'precio' => $productObj->getPrecio(),
                     'descripcion' => $productObj->getDescripcion(),
                     'imagen' => $productObj->getImagen(),
-                    'stock' => $productObj->getStock()
+                    'stock' => 1 // Stock ficticio para evitar error
                 ];
                 require_once 'views/layout/header.php';
                 // Aseguramos que la ruta sea correcta

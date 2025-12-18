@@ -22,4 +22,18 @@ class LogDAO extends Model
         $stmt->bind_param("iss", $uid, $tipo, $accion);
         return $stmt->execute();
     }
+
+    public function getAll(): array
+    {
+        $sql = "SELECT l.*, u.email as usuario_email 
+                FROM logs l 
+                LEFT JOIN usuarios u ON l.usuario_id = u.id 
+                ORDER BY l.timestamp DESC";
+        $result = $this->db->query($sql);
+        $logs = [];
+        while ($row = $result->fetch_assoc()) {
+            $logs[] = $row;
+        }
+        return $logs;
+    }
 }

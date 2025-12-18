@@ -63,6 +63,30 @@ class OrderDAO extends Model
         return null;
     }
 
+    // Método para el panel de administración
+    public function getAllForAdmin(): array
+    {
+        $sql = "SELECT p.*, u.nombre as usuario_nombre, u.email as usuario_email 
+                FROM pedidos p 
+                INNER JOIN usuarios u ON p.usuario_id = u.id 
+                ORDER BY p.fecha DESC";
+        $result = $this->db->query($sql);
+        $orders = [];
+        while ($row = $result->fetch_assoc()) {
+            $orders[] = $row;
+        }
+        return $orders;
+    }
+
+    public function updateStatus(int $id, string $status): bool
+    {
+        $sql = "UPDATE pedidos SET estado = ? WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+        $stmt->bind_param("si", $status, $id);
+        return $stmt->execute();
+    }
+
     private function mapToOrder(array $row): Order
     {
         $o = new Order();
