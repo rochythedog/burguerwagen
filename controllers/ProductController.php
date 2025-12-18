@@ -36,22 +36,18 @@ class ProductController
             $productObj = $productDAO->getById($id);
 
             if ($productObj) {
-                // Convertir a array para la vista
+                // Preparamos los datos para la vista
                 $product = [
                     'id' => $productObj->getId(),
                     'nombre' => $productObj->getNombre(),
                     'precio' => $productObj->getPrecio(),
                     'descripcion' => $productObj->getDescripcion(),
                     'imagen' => $productObj->getImagen(),
-                    'stock' => 1 // Stock ficticio para evitar error
+                    'stock' => 1 // Stock ficticio para que salga disponible
                 ];
+                
                 require_once 'views/layout/header.php';
-                // Aseguramos que la ruta sea correcta
-                if (file_exists('views/product/show.php')) {
-                    require_once 'views/product/show.php';
-                } else {
-                    echo "Error: La vista views/product/show.php no existe.";
-                }
+                require_once 'views/product/show.php';
                 require_once 'views/layout/footer.php';
             } else {
                 header("Location: index.php?controller=product&action=index");
