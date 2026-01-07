@@ -87,6 +87,15 @@ class OrderDAO extends Model
         return $stmt->execute();
     }
 
+    public function delete(int $id): bool
+    {
+        $sql = "DELETE FROM pedidos WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
+
     private function mapToOrder(array $row): Order
     {
         $o = new Order();

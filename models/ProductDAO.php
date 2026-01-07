@@ -20,6 +20,23 @@ class ProductDAO extends Model
         return $products;
     }
 
+    public function getByCategory(int $categoryId): array
+    {
+        $sql = "SELECT * FROM productos WHERE activo = 1 AND categoria_id = ? ORDER BY id DESC";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return [];
+
+        $stmt->bind_param("i", $categoryId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $products = [];
+        while ($row = $result->fetch_assoc()) {
+            $products[] = $this->mapToProduct($row);
+        }
+        return $products;
+    }
+
     public function getById(int $id): ?Product
     {
         $sql = "SELECT * FROM productos WHERE id = ?";
@@ -59,9 +76,9 @@ class ProductDAO extends Model
         $descripcion = $product->getDescripcion();
         $precio = $product->getPrecio();
         $imagen = $product->getImagen();
-        $activo = $product->getActivo();
+        $activo = $product->isActivo() ? 1 : 0;
 
-        $stmt->bind_param("issisi", $categoriaId, $nombre, $descripcion, $precio, $imagen, $activo);
+        $stmt->bind_param("issdsi", $categoriaId, $nombre, $descripcion, $precio, $imagen, $activo);
         return $stmt->execute();
     }
 
@@ -76,10 +93,10 @@ class ProductDAO extends Model
         $descripcion = $product->getDescripcion();
         $precio = $product->getPrecio();
         $imagen = $product->getImagen();
-        $activo = $product->getActivo();
+        $activo = $product->isActivo() ? 1 : 0;
         $id = $product->getId();
 
-        $stmt->bind_param("issisii", $categoriaId, $nombre, $descripcion, $precio, $imagen, $activo, $id);
+        $stmt->bind_param("issdsii", $categoriaId, $nombre, $descripcion, $precio, $imagen, $activo, $id);
         return $stmt->execute();
     }
 

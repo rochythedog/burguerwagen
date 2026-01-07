@@ -123,7 +123,7 @@ class OrderController
                     $order->setUsuarioId($usuario_id);
                     $order->setDireccionId($address->getId()); // Usamos el ID de la dirección guardada
                     $order->setTotal($total);
-                    $order->setEstado('confirm');
+                    $order->setEstado('pending');
                     $order->setMoneda('EUR');
 
                     $orderDAO = new OrderDAO();
@@ -168,8 +168,37 @@ class OrderController
                 $orderItemDAO = new OrderItemDAO();
                 $productos = $orderItemDAO->getByOrderId($_GET['id']);
                 
+                // Obtener datos de la dirección
+                $addressDAO = new AddressDAO();
+                $address = $addressDAO->getById($order->getDireccionId());
+                
                 require_once 'views/layout/header.php';
                 require_once 'views/order/confirmed.php';
+                require_once 'views/layout/footer.php';
+            } else {
+                header("Location: index.php?controller=order&action=index");
+            }
+        } else {
+            header("Location: index.php");
+        }
+    }
+
+    public function detalles()
+    {
+        if(isset($_SESSION['identity']) && isset($_GET['id'])){
+            $orderDAO = new OrderDAO();
+            $order = $orderDAO->getById($_GET['id']);
+            
+            if ($order && $order->getUsuarioId() == $_SESSION['user_id']) {
+                $orderItemDAO = new OrderItemDAO();
+                $productos = $orderItemDAO->getByOrderId($_GET['id']);
+                
+                // Obtener datos de la dirección
+                $addressDAO = new AddressDAO();
+                $address = $addressDAO->getById($order->getDireccionId());
+                
+                require_once 'views/layout/header.php';
+                require_once 'views/order/detalles.php';
                 require_once 'views/layout/footer.php';
             } else {
                 header("Location: index.php?controller=order&action=index");

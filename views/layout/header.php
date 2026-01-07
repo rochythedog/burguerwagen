@@ -51,7 +51,7 @@ $a = $_GET['action'] ?? 'index';
             <!-- logo -->
             <div class="text-center">
                 <a class="navbar-brand d-block" href="<?= BASE_URL ?>/index.php">
-                    <img src="<?= BASE_URL ?>/public/img/logo.webp" alt="BurguerWagen" class="vw-logo">
+                    <img src="<?= BASE_URL ?>/public/img/logo.svg" alt="BurguerWagen" class="vw-logo">
                 </a>
             </div>
             
@@ -110,9 +110,9 @@ $a = $_GET['action'] ?? 'index';
             <a class="nav-link text-white <?= ($c == 'product' && $a == 'index') ? 'text-decoration-underline' : '' ?>" href="index.php?controller=product&action=index">Menu</a>
         </li>
         <?php if ($userName): ?>
-          <li class="nav-item">
-            <a class="nav-link text-white <?= ($c == 'order' && $a == 'index') ? 'text-decoration-underline' : '' ?>" href="index.php?controller=order&action=index">My orders</a>
-          </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white <?= ($c == 'order' && $a == 'index') ? 'text-decoration-underline' : '' ?>" href="index.php?controller=order&action=index">Mis pedidos</a>
+                    </li>
         <?php endif; ?>
         <?php if ($userRole === 'admin'): ?>
           <li class="nav-item">

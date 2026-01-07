@@ -1,20 +1,34 @@
 <?php
 require_once 'models/ProductDAO.php';
+require_once 'models/CategoryDAO.php';
 
 class HomeController extends Controller
 {
     public function index(): void
     {
-        // Usamos el DAO para obtener los datos
         $productDAO = new ProductDAO();
+        $categoryDAO = new CategoryDAO();
         
-        // Obtenemos los productos (asumiendo que quieres mostrar 6 destacados o todos)
-        // Nota: En la vista index.php espera un array de arrays o objetos. 
-        // Si tu vista usa $p['nombre'], necesitarás adaptar la vista a $p->getNombre() 
-        // o convertir los objetos a array aquí. Para mantener compatibilidad rápida:
-        $productsObjects = $productDAO->getAll();
+        // Obtenemos todas las categorías
+        $categoriesObjects = $categoryDAO->getAll();
+        $categories = [];
+        foreach ($categoriesObjects as $cat) {
+            $categories[] = [
+                'id' => $cat->getId(),
+                'nombre' => $cat->getNombre()
+            ];
+        }
         
-        // Convertimos objetos a array para que la vista actual (que usa $p['nombre']) no falle
+        // Verificamos si hay un filtro por categoría
+        $categoryId = isset($_GET['category']) ? (int)$_GET['category'] : 0;
+        
+        if ($categoryId > 0) {
+            $productsObjects = $productDAO->getByCategory($categoryId);
+        } else {
+            $productsObjects = $productDAO->getAll();
+        }
+        
+        // Convertimos objetos a array para compatibilidad con la vista
         $products = [];
         foreach ($productsObjects as $p) {
             $products[] = [
@@ -22,7 +36,8 @@ class HomeController extends Controller
                 'nombre' => $p->getNombre(),
                 'precio' => $p->getPrecio(),
                 'imagen' => $p->getImagen(),
-                'descripcion' => $p->getDescripcion()
+                'descripcion' => $p->getDescripcion(),
+                'categoria_id' => $p->getCategoriaId()
             ];
         }
         
@@ -30,8 +45,10 @@ class HomeController extends Controller
         $products = array_slice($products, 0, 6);
 
         $this->render('home/index', [
-            'title'    => 'Welcome to BurguerWagen',
-            'products' => $products
+            'title'      => 'Welcome to BurguerWagen',
+            'products'   => $products,
+            'categories' => $categories,
+            'selectedCategory' => $categoryId
         ]);
     }
 }
