@@ -10,28 +10,34 @@
                         <th>Coste</th>
                         <th>Fecha</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($orders as $ped): ?>
                         <tr>
                             <td>
-                                <a href="index.php?controller=order&action=confirmed&id=<?= $ped->getId() ?>" class="fw-bold text-decoration-none">
+                                <a href="index.php?controller=order&action=detalles&id=<?= $ped->getId() ?>" class="fw-bold text-decoration-none">
                                     #<?= $ped->getId() ?>
                                 </a>
                             </td>
-                            <td><?= number_format($ped->getCoste(), 2) ?> €</td>
+                            <td><?= number_format($ped->getTotal(), 2) ?> €</td>
                             <td><?= $ped->getFecha() ?></td>
                             <td>
                                 <?php 
                                     $status = $ped->getEstado();
                                     $badgeClass = 'bg-secondary';
-                                    if($status == 'confirm') $badgeClass = 'bg-warning text-dark';
-                                    elseif($status == 'preparation') $badgeClass = 'bg-info text-dark';
-                                    elseif($status == 'ready') $badgeClass = 'bg-primary';
-                                    elseif($status == 'sended') $badgeClass = 'bg-success';
+                                    if($status == 'paid') $badgeClass = 'bg-warning text-dark';
+                                    elseif($status == 'preparing') $badgeClass = 'bg-info text-dark';
+                                    elseif($status == 'delivered') $badgeClass = 'bg-success';
+                                    elseif($status == 'cancelled') $badgeClass = 'bg-danger';
                                 ?>
-                                <span class="badge <?= $badgeClass ?>"><?= $status ?></span>
+                                <span class="badge <?= $badgeClass ?>"><?= ucfirst($status) ?></span>
+                            </td>
+                            <td>
+                                <a href="index.php?controller=order&action=detalles&id=<?= $ped->getId() ?>" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Ver detalles
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

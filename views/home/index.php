@@ -1,4 +1,3 @@
-<!-- banner principal -->
 <div class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -13,20 +12,21 @@
     </div>
 </div>
 
-<!-- seccion 2 -->
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title mb-0 text-start">Nuestros mejores <strong>productos</strong> al mejor <strong>precio</strong></h2>
         <div>
-            <button class="btn btn-outline-primary me-2">Todos (<?= count($products) ?>)</button>
-            <button class="btn btn-outline-secondary me-2">Carne</button>
-            <button class="btn btn-outline-secondary">Pollo</button>
+            <select id="filterCategory" class="form-select" style="max-width: 200px;">
+                <option value="0">Todos (<?= count($products) ?>)</option>
+                <?php foreach ($categories as $cat): ?>
+                    <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['nombre']) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
     </div>
     <p class="text-muted mb-5">Dinos cómo eres y te diremos qué menu va contigo.</p>
 
-    <!-- productos -->
-    <div class="row">
+    <div class="row" id="productsContainer">
     <?php foreach ($products as $p): ?>
       <div class="col-md-4 mb-4">
         <div class="card h-100 text-center p-3">
@@ -54,7 +54,43 @@
     </div>
 </div>
 
-<!-- menu simpson -->
+<script>
+document.getElementById('filterCategory').addEventListener('change', function() {
+    const categoryId = this.value;
+    fetch('api/filter.php?category=' + categoryId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let html = '';
+                data.products.forEach(product => {
+                    html += `
+                      <div class="col-md-4 mb-4">
+                        <div class="card h-100 text-center p-3">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-arrow-right"></i></button>
+                            </div>
+                            <h3 class="card-title mt-3">${product.nombre.toUpperCase()}</h3>
+                            
+                            <div class="my-4" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                ${product.imagen ? `<img src="${product.imagen}" class="img-fluid" alt="${product.nombre}" style="max-height: 100%;">` : '<div class="text-muted">Sin imagen</div>'}
+                            </div>
+
+                            <div class="mt-auto">
+                                <div class="d-inline-block bg-success text-white rounded-circle p-2 mb-3" style="width: 40px; height: 40px; line-height: 25px;">C</div>
+                                <p class="price-tag">${product.nombre} desde ${parseFloat(product.precio).toFixed(2)}€</p>
+                                <a href="index.php?controller=product&action=show&id=${product.id}" class="btn btn-cta w-100">Pedir</a>
+                            </div>
+                        </div>
+                      </div>
+                    `;
+                });
+                document.getElementById('productsContainer').innerHTML = html;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+</script>
+
 <div class="bg-primary text-white py-5 mt-5" style="background-color: var(--vw-dark-blue) !important;">
     <div class="container">
         <div class="row align-items-center">
@@ -70,18 +106,16 @@
                 </ul>
                 <a href="#" class="btn btn-light rounded-pill px-4 py-2 fw-bold text-primary">Pedir ahora</a>
                 <br>
-                <a href="#" class="btn btn-outline-light rounded-pill px-4 py-2 mt-3">Ver otros productos<</a>
+                <a href="#" class="btn btn-outline-light rounded-pill px-4 py-2 mt-3">Ver otros productos</a>
             </div>
             <div class="col-md-6">
-                <!-- imagen simpson -->
                 <img src="<?= BASE_URL ?>/public/img/burguer-simpson.webp" class="img-fluid rounded shadow-lg" alt="BurguerWagen Promo">
             </div>
         </div>
     </div>
 </div>
 
-<!-- ofertas -->
 <div class="container my-5 py-5 text-center">
-    <h2 class="section-title">Descubre nuestras <strong>ofertas</strong></h2>
-    <a href="index.php?controller=product&action=index" class="btn btn-primary btn-lg">Ver todas las ofertas</a>
+    <h2 class="section-title">Descubre todos nuestros <strong>productos</strong></h2>
+    <a href="index.php?controller=product&action=index" class="btn btn-primary btn-lg">Ver todos los productos</a>
 </div>
