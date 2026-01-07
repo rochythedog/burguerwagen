@@ -36,6 +36,63 @@ class ProductDAO extends Model
         return null;
     }
 
+    // Método para obtener arrays crudos para la API del admin
+    public function getAllAsArray(): array
+    {
+        $sql = "SELECT * FROM productos ORDER BY id DESC";
+        $result = $this->db->query($sql);
+        $products = [];
+        while ($row = $result->fetch_assoc()) {
+            $products[] = $row;
+        }
+        return $products;
+    }
+
+    public function save(Product $product): bool
+    {
+        $sql = "INSERT INTO productos (categoria_id, nombre, descripcion, precio, imagen, activo) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $categoriaId = $product->getCategoriaId();
+        $nombre = $product->getNombre();
+        $descripcion = $product->getDescripcion();
+        $precio = $product->getPrecio();
+        $imagen = $product->getImagen();
+        $activo = $product->getActivo();
+
+        $stmt->bind_param("issisi", $categoriaId, $nombre, $descripcion, $precio, $imagen, $activo);
+        return $stmt->execute();
+    }
+
+    public function update(Product $product): bool
+    {
+        $sql = "UPDATE productos SET categoria_id = ?, nombre = ?, descripcion = ?, precio = ?, imagen = ?, activo = ? WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $categoriaId = $product->getCategoriaId();
+        $nombre = $product->getNombre();
+        $descripcion = $product->getDescripcion();
+        $precio = $product->getPrecio();
+        $imagen = $product->getImagen();
+        $activo = $product->getActivo();
+        $id = $product->getId();
+
+        $stmt->bind_param("issisii", $categoriaId, $nombre, $descripcion, $precio, $imagen, $activo, $id);
+        return $stmt->execute();
+    }
+
+    public function delete(int $id): bool
+    {
+        $sql = "DELETE FROM productos WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
+
     private function mapToProduct(array $row): Product
     {
         $p = new Product();

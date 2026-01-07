@@ -11,7 +11,7 @@ $a = $_GET['action'] ?? 'index';
     <title><?= APP_NAME ?> - <?= isset($title) ? htmlspecialchars($title) : '' ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> <!-- iconos -->
     <link href="<?= BASE_URL ?>/public/css/styles.css?v=<?= time() ?>" rel="stylesheet">
     <style>
         .hero-section {
@@ -78,6 +78,13 @@ $a = $_GET['action'] ?? 'index';
                 </a>
 
                 <?php if ($userName): ?>
+                  <!-- Icono Admin (solo si es admin) -->
+                  <?php if ($userRole === 'admin'): ?>
+                    <a href="index.php?controller=adminOrder&action=index" class="text-white" title="Panel de Administración">
+                        <i class="bi bi-gear-fill fs-5"></i>
+                    </a>
+                  <?php endif; ?>
+
                   <a href="index.php?controller=user&action=profile" class="text-white"><i class="bi bi-person-circle fs-5"></i></a>
                   <a href="index.php?controller=user&action=logout" class="text-white"><i class="bi bi-box-arrow-right fs-5"></i></a>
                 <?php else: ?>
@@ -109,7 +116,7 @@ $a = $_GET['action'] ?? 'index';
         <?php endif; ?>
         <?php if ($userRole === 'admin'): ?>
           <li class="nav-item">
-            <a class="nav-link text-white <?= ($c == 'adminOrder' && $a == 'index') ? 'text-decoration-underline' : '' ?>" href="index.php?controller=adminOrder&action=index">Admin orders</a>
+            <a class="nav-link text-white <?= ($c == 'adminOrder' && $a == 'index') ? 'text-decoration-underline' : '' ?>" href="index.php?controller=adminOrder&action=index">Panel Admin</a>
           </li>
         <?php endif; ?>
     </ul>
