@@ -1,11 +1,11 @@
-# 🍔 BurguerWagen
+# BurguerWagen
 
 **BurguerWagen** es un proyecto web desarrollado como práctica final, que simula una aplicación real de pedidos online para una hamburguesería.  
 El objetivo del proyecto ha sido aplicar de forma práctica los conocimientos adquiridos sobre **PHP, bases de datos, MVC, APIs, JavaScript y despliegue web**, creando una aplicación funcional y realista.
 
 ---
 
-## 🧠 Idea del proyecto
+## Idea del proyecto
 
 La idea principal era desarrollar una web donde un usuario pudiera:
 
@@ -19,7 +19,7 @@ A lo largo del desarrollo, la estructura del proyecto fue cambiando bastante. En
 
 ---
 
-## 🧱 Estructura del proyecto
+## Estructura del proyecto
 
 El proyecto sigue una **arquitectura MVC (Modelo – Vista – Controlador)** con un único punto de entrada (`index.php`), que se encarga de gestionar todas las peticiones.
 
@@ -61,7 +61,7 @@ Se utilizan **claves foráneas**, relaciones entre tablas y reglas como `ON DELE
 
 ---
 
-## 🧩 Modelos y DAOs
+## Modelos y DAOs
 
 Durante el desarrollo, el proyecto evolucionó hasta implementar una separación clara entre:
 
@@ -77,7 +77,7 @@ Esto mejora la organización del código, facilita el mantenimiento y permite en
 
 ---
 
-## 🔌 API REST propia
+## API REST propia
 
 El proyecto incluye una **API REST desarrollada en PHP**, que devuelve datos en formato **JSON** y es **accesible directamente desde el navegador**.
 
@@ -91,7 +91,7 @@ Esta API se consume mediante **JavaScript (Fetch API)**, especialmente en el pan
 
 ---
 
-## 🌍 API externa de divisas
+## API externa de divisas
 
 Además de la API propia, se ha implementado una **API externa de conversión de divisas**, que permite mostrar los precios de los productos en diferentes monedas.
 
@@ -99,7 +99,7 @@ Esto simula un entorno más realista y demuestra la integración de servicios ex
 
 ---
 
-## 🛠️ Panel de administración
+## Panel de administración
 
 El panel de administrador permite:
 
@@ -119,7 +119,7 @@ El acceso está protegido mediante **sesiones** y comprobación de rol (`admin`)
 
 ---
 
-## 🎨 Frontend y diseño
+## Frontend y diseño
 
 - HTML + Bootstrap
 - Diseño responsive
@@ -130,7 +130,7 @@ El enfoque principal ha sido el correcto funcionamiento de la aplicación más q
 
 ---
 
-## 🚀 Proceso y aprendizaje
+## Proceso y aprendizaje
 
 Durante el desarrollo del proyecto:
 
@@ -143,7 +143,7 @@ Este proceso ha permitido comprender el desarrollo web de una forma más prácti
 
 ---
 
-## 🧑‍💻 Tecnologías utilizadas
+## Tecnologías utilizadas
 
 - PHP
 - MySQL / MariaDB
@@ -157,7 +157,7 @@ Este proceso ha permitido comprender el desarrollo web de una forma más prácti
 
 ---
 
-## 👤 Autor
+## Autor
 
 **Desarrollado por:**  
 **Roger Malgrat Gonzalez**
