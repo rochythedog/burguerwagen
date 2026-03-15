@@ -1,0 +1,21 @@
+services:
+  burguerwagen-db:
+    image: mysql:8.0
+    container_name: burguerwagen-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: burguerwagen
+      TZ: Europe/Madrid
+    ports:
+      - "3307:3306"
+    volumes:
+      - burguerwagen_mysql_data:/var/lib/mysql
+      - ./burguerwagen.sql:/docker-entrypoint-initdb.d/01-burguerwagen.sql:ro
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+
+volumes:
+  burguerwagen_mysql_data:

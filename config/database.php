@@ -7,7 +7,7 @@ class Database
     public static function getConnection(): mysqli
     {
         if (self::$connection === null) {
-            self::$connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            self::$connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
             if (self::$connection->connect_error) {
                 die('Database connection error: ' . self::$connection->connect_error);
