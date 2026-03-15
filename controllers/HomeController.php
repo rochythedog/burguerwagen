@@ -19,15 +19,9 @@ class HomeController extends Controller
             ];
         }
         
-        // Verificamos si hay un filtro por categoría
-        $categoryId = isset($_GET['category']) ? (int)$_GET['category'] : 0;
-        
-        if ($categoryId > 0) {
-            $productsObjects = $productDAO->getByCategory($categoryId);
-        } else {
-            $productsObjects = $productDAO->getAll();
-        }
-        
+        // Obtenemos todos los productos (el filtrado se hace en JS con .filter())
+        $productsObjects = $productDAO->getAll();
+
         // Convertimos objetos a array para compatibilidad con la vista
         $products = [];
         foreach ($productsObjects as $p) {
@@ -40,15 +34,11 @@ class HomeController extends Controller
                 'categoria_id' => $p->getCategoriaId()
             ];
         }
-        
-        // Limitamos a 6 para el home si hay muchos
-        $products = array_slice($products, 0, 6);
 
         $this->render('home/index', [
             'title'      => 'Welcome to BurguerWagen',
             'products'   => $products,
-            'categories' => $categories,
-            'selectedCategory' => $categoryId
+            'categories' => $categories
         ]);
     }
 }
