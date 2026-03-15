@@ -1,47 +1,109 @@
-// cargar carrito con local storage
-function loadCart() {
-  const raw = localStorage.getItem('bw_cart');
-  if (!raw) return [];
-  try {
-    return JSON.parse(raw);
-  } catch (e) {
-    return [];
-  }
+// clase del carrito
+class Cart {
+    constructor(storageKey = 'bw_cart') {
+        this.storageKey = storageKey;
+    }
+
+    load() {
+        const raw = localStorage.getItem(this.storageKey);
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    save(cart) {
+        localStorage.setItem(this.storageKey, JSON.stringify(cart));
+    }
+
+    addItem(productId, name, price) {
+        const cart = this.load();
+        const existing = cart.find(item => item.product_id === productId);
+
+        if (existing) {
+            existing.quantity += 1;
+        } else {
+            cart.push({
+                product_id: productId,
+                name: name,
+                unit_price: price,
+                quantity: 1
+            });
+        }
+
+        this.save(cart);
+        alert('Producto añadido al carrito.');
+    }
+
+    attachToForm(formId, fieldName = 'cart_json') {
+        const form = document.getElementById(formId);
+        if (!form) return;
+
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = fieldName;
+        hidden.value = JSON.stringify(this.load());
+        form.appendChild(hidden);
+    }
 }
 
-// guardar carrito
-function saveCart(cart) {
-  localStorage.setItem('bw_cart', JSON.stringify(cart));
+// clase para filtrar productos por categoria
+class ProductFilter {
+    constructor(products, containerId) {
+        this.products = products;
+        this.containerId = containerId;
+    }
+
+    filter(categoryId) {
+        if (categoryId == 0) {
+            return this.products;
+        }
+        return this.products.filter(p => p.categoria_id == categoryId);
+    }
+
+    render(categoryId) {
+        const filtered = this.filter(categoryId);
+        const container = document.getElementById(this.containerId);
+        if (!container) return;
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="col-12 text-center text-muted py-5">No hay productos en esta categoría.</div>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(product => `
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center p-3">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-arrow-right"></i></button>
+                    </div>
+                    <h3 class="card-title mt-3">${product.nombre.toUpperCase()}</h3>
+                    <div class="my-4" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                        ${product.imagen
+                            ? `<img src="${product.imagen}" class="img-fluid" alt="${product.nombre}" style="max-height: 100%;">`
+                            : '<div class="text-muted">Sin imagen</div>'}
+                    </div>
+                    <div class="mt-auto">
+                        <div class="d-inline-block bg-success text-white rounded-circle p-2 mb-3" style="width: 40px; height: 40px; line-height: 25px;">C</div>
+                        <p class="price-tag">${product.nombre} desde ${parseFloat(product.precio).toFixed(2)}€</p>
+                        <a href="index.php?controller=product&action=show&id=${product.id}" class="btn btn-cta w-100">Pedir</a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
 }
 
-// añadir producto a carrito
+// carrito global
+const cart = new Cart();
+
+// funciones que usan el carrito, las vistas las llaman directamente
 function addToCart(productId, name, price) {
-  const cart = loadCart();
-  const existing = cart.find(item => item.product_id === productId);
-
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({
-      product_id: productId,
-      name: name,
-      unit_price: price,
-      quantity: 1
-    });
-  }
-
-  saveCart(cart);
-  alert('Product added to cart.');
+    cart.addItem(productId, name, price);
 }
 
-// gestionar carrito con json
 function attachCartToForm(formId, fieldName = 'cart_json') {
-  const form = document.getElementById(formId);
-  if (!form) return;
-
-  const hidden = document.createElement('input');
-  hidden.type = 'hidden';
-  hidden.name = fieldName;
-  hidden.value = JSON.stringify(loadCart());
-  form.appendChild(hidden);
+    cart.attachToForm(formId, fieldName);
 }

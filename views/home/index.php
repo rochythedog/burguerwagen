@@ -26,68 +26,24 @@
     </div>
     <p class="text-muted mb-5">Dinos cómo eres y te diremos qué menu va contigo.</p>
 
-    <div class="row" id="productsContainer">
-    <?php foreach ($products as $p): ?>
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 text-center p-3">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-arrow-right"></i></button>
-            </div>
-            <h3 class="card-title mt-3"><?= htmlspecialchars(strtoupper($p['nombre'])) ?></h3>
-            
-            <div class="my-4" style="height: 200px; display: flex; align-items: center; justify-content: center;">
-                <?php if (!empty($p['imagen'])): ?>
-                    <img src="<?= htmlspecialchars($p['imagen']) ?>" class="img-fluid" alt="<?= htmlspecialchars($p['nombre']) ?>" style="max-height: 100%;">
-                <?php else: ?>
-                    <div class="text-muted">Sin imagen</div>
-                <?php endif; ?>
-            </div>
-
-            <div class="mt-auto">
-                <div class="d-inline-block bg-success text-white rounded-circle p-2 mb-3" style="width: 40px; height: 40px; line-height: 25px;">C</div>
-                <p class="price-tag"><?= htmlspecialchars($p['nombre']) ?> desde <?= number_format($p['precio'], 2) ?>€</p>
-                <a href="index.php?controller=product&action=show&id=<?= $p['id'] ?>" class="btn btn-cta w-100">Pedir</a>
-            </div>
-        </div>
-      </div>
-    <?php endforeach; ?>
-    </div>
+    <div class="row" id="productsContainer"></div>
 </div>
 
 <script>
-document.getElementById('filterCategory').addEventListener('change', function() {
-    const categoryId = this.value;
-    fetch('api/filter.php?category=' + categoryId)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                let html = '';
-                data.products.forEach(product => {
-                    html += `
-                      <div class="col-md-4 mb-4">
-                        <div class="card h-100 text-center p-3">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-sm btn-outline-secondary rounded-circle"><i class="bi bi-arrow-right"></i></button>
-                            </div>
-                            <h3 class="card-title mt-3">${product.nombre.toUpperCase()}</h3>
-                            
-                            <div class="my-4" style="height: 200px; display: flex; align-items: center; justify-content: center;">
-                                ${product.imagen ? `<img src="${product.imagen}" class="img-fluid" alt="${product.nombre}" style="max-height: 100%;">` : '<div class="text-muted">Sin imagen</div>'}
-                            </div>
+// productos que vienen del servidor
+const allProducts = <?= json_encode(array_values($products)) ?>;
 
-                            <div class="mt-auto">
-                                <div class="d-inline-block bg-success text-white rounded-circle p-2 mb-3" style="width: 40px; height: 40px; line-height: 25px;">C</div>
-                                <p class="price-tag">${product.nombre} desde ${parseFloat(product.precio).toFixed(2)}€</p>
-                                <a href="index.php?controller=product&action=show&id=${product.id}" class="btn btn-cta w-100">Pedir</a>
-                            </div>
-                        </div>
-                      </div>
-                    `;
-                });
-                document.getElementById('productsContainer').innerHTML = html;
-            }
-        })
-        .catch(error => console.error('Error:', error));
+// esperamos a que cargue main.js antes de usar las clases
+document.addEventListener('DOMContentLoaded', function() {
+    const productFilter = new ProductFilter(allProducts, 'productsContainer');
+
+    // mostrar todos al entrar
+    productFilter.render(0);
+
+    // filtrar al cambiar el select
+    document.getElementById('filterCategory').addEventListener('change', function() {
+        productFilter.render(this.value);
+    });
 });
 </script>
 

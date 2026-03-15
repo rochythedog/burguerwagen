@@ -62,18 +62,13 @@ function renderOrders() {
     var filterText = document.getElementById('orderFilterUser').value.toLowerCase();
     var sortType = document.getElementById('orderSort').value;
 
-    // Filtrar
-    var filtered = [];
-    for (var i = 0; i < appData.orders.length; i++) {
-        var o = appData.orders[i];
+    // filtrar pedidos
+    var filtered = appData.orders.filter(function(o) {
         var nombre = o.usuario_nombre ? o.usuario_nombre.toLowerCase() : '';
         var email = o.usuario_email ? o.usuario_email.toLowerCase() : '';
         var id = o.id.toString();
-
-        if (nombre.includes(filterText) || email.includes(filterText) || id.includes(filterText)) {
-            filtered.push(o);
-        }
-    }
+        return nombre.includes(filterText) || email.includes(filterText) || id.includes(filterText);
+    });
 
     // Ordenar
     filtered.sort(function(a, b) {
