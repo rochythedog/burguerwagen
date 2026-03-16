@@ -22,9 +22,10 @@
                 <?php endif; ?>
             </div>
             
-            <a href="index.php?controller=order&action=add&id=<?= $product['id'] ?>" class="btn btn-primary btn-lg rounded-pill px-5 py-3 fw-bold">
+            <button class="btn btn-primary btn-lg rounded-pill px-5 py-3 fw-bold"
+                onclick="addToCart(<?= $product['id'] ?>, '<?= htmlspecialchars($product['nombre'], ENT_QUOTES) ?>', <?= $product['precio'] ?>)">
                 Añadir al carrito <i class="bi bi-cart-plus ms-2"></i>
-            </a>
+            </button>
             
             <div class="mt-4">
                 <a href="index.php?controller=product&action=index" class="text-decoration-none text-muted">

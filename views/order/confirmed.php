@@ -57,6 +57,11 @@
         </div>
     </div>
 </div>
+<script>
+// limpiar el carrito del localStorage al confirmar el pedido
+cart.clear();
+cart.updateBadge();
+</script>
 <?php else: ?>
 <div class="container my-5 pt-5 text-center">
     <h1>Tu pedido no ha podido procesarse</h1>
