@@ -62,19 +62,7 @@ $a = $_GET['action'] ?? 'index';
                 <!-- Icono Carrito -->
                 <a href="index.php?controller=order&action=cart" class="text-white position-relative">
                     <i class="bi bi-cart3 fs-5"></i>
-                    <?php 
-                    $count = 0;
-                    if(isset($_SESSION['carrito'])){
-                        foreach($_SESSION['carrito'] as $element){
-                            $count += $element['unidades'];
-                        }
-                    }
-                    if($count > 0): 
-                    ?>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                            <?= $count ?>
-                        </span>
-                    <?php endif; ?>
+                    <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; display: none;"></span>
                 </a>
 
                 <?php if ($userName): ?>

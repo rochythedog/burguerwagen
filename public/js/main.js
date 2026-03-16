@@ -14,18 +14,23 @@ class Cart {
         }
     }
 
-    save(cart) {
-        localStorage.setItem(this.storageKey, JSON.stringify(cart));
+    save(items) {
+        localStorage.setItem(this.storageKey, JSON.stringify(items));
+    }
+
+    clear() {
+        localStorage.removeItem(this.storageKey);
     }
 
     addItem(productId, name, price) {
-        const cart = this.load();
-        const existing = cart.find(item => item.product_id === productId);
+        // guardar en localStorage
+        const items = this.load();
+        const existing = items.find(item => item.product_id === productId);
 
         if (existing) {
             existing.quantity += 1;
         } else {
-            cart.push({
+            items.push({
                 product_id: productId,
                 name: name,
                 unit_price: price,
@@ -33,8 +38,25 @@ class Cart {
             });
         }
 
-        this.save(cart);
-        alert('Producto añadido al carrito.');
+        this.save(items);
+        window.location.href = 'index.php?controller=order&action=cart';
+    }
+
+    getTotalItems() {
+        return this.load().reduce((sum, item) => sum + item.quantity, 0);
+    }
+
+    updateBadge() {
+        // actualizar el contador del icono del carrito
+        const badge = document.getElementById('cart-badge');
+        if (!badge) return;
+        const total = this.getTotalItems();
+        if (total > 0) {
+            badge.textContent = total;
+            badge.style.display = '';
+        } else {
+            badge.style.display = 'none';
+        }
     }
 
     attachToForm(formId, fieldName = 'cart_json') {
@@ -98,6 +120,11 @@ class ProductFilter {
 
 // carrito global
 const cart = new Cart();
+
+// actualizar el badge del carrito en cada pagina
+document.addEventListener('DOMContentLoaded', function() {
+    cart.updateBadge();
+});
 
 // funciones que usan el carrito, las vistas las llaman directamente
 function addToCart(productId, name, price) {

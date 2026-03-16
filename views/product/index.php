@@ -31,9 +31,10 @@
                                 <a href="index.php?controller=product&action=show&id=<?= $product['id'] ?>" class="btn btn-outline-primary rounded-pill">
                                     Ver detalles
                                 </a>
-                                <a href="index.php?controller=order&action=add&id=<?= $product['id'] ?>" class="btn btn-primary rounded-pill">
+                                <button class="btn btn-primary rounded-pill"
+                                    onclick="addToCart(<?= $product['id'] ?>, '<?= htmlspecialchars($product['nombre'], ENT_QUOTES) ?>', <?= $product['precio'] ?>)">
                                     Añadir al carrito
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>

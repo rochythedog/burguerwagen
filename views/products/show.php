@@ -11,10 +11,9 @@
     <p class="text-muted"><?= htmlspecialchars($product['category_name'] ?? '') ?></p>
     <p><?= nl2br(htmlspecialchars($product['descripcion'] ?? '')) ?></p>
     <p class="h4 fw-bold mb-4"><?= number_format($product['precio'], 2) ?> €</p>
-    <button class="btn btn-success btn-lg"
-      onclick="addToCart(<?= $product['id'] ?>, '<?= htmlspecialchars($product['nombre'], ENT_QUOTES) ?>', <?= $product['precio'] ?>)">
+    <a href="index.php?controller=order&action=add&id=<?= $product['id'] ?>" class="btn btn-success btn-lg">
       Add to cart
-    </button>
+    </a>
     <a href="index.php?controller=product&action=index" class="btn btn-link">Back to menu</a>
   </div>
 </div>
